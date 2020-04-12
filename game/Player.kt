@@ -18,7 +18,7 @@ class Player(sprites: Array<Sprite>, private val movementJoystick: IJoystick, pr
 
     // We start -4 because we want immunity at the start of the game just in case
     private var cooldownAccReceivingDamage: Float = -4.0f
-    
+
     private val cooldownReceivingDamage: Float = 1.0f
     var hp = 100.0f
     var accumulatorSpecialAttack = 0.0f
