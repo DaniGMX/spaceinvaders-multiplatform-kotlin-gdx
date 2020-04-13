@@ -4,6 +4,7 @@ import architecture.engine.World
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.math.Vector2
 import com.my.architecture.engine.structs.GameObject
+import java.util.logging.Level
 
 open class Bullet(pos: Vector2,
                   private val dir: Vector2,
@@ -19,6 +20,11 @@ open class Bullet(pos: Vector2,
     }
 
     override fun update(dt: Float) {
+        if (LevelManager.outOfBounds(position, height, width)) {
+            World.world.destroy(this)
+            return
+        }
+
         position.y += dt * speed * dir.y
         position.x += dt * speed * dir.x
         World.world.overlaps(this)
@@ -28,9 +34,16 @@ open class Bullet(pos: Vector2,
      * Standard behaviour
      */
     override fun onCollide(other: GameObject) {
-        if (other.get<BasicEnemy>() == null) return
-        other.get<BasicEnemy>()!!.hp -= damage
-        onHit()
-        World.world.destroy(this)
+        when (other) {
+            is BasicEnemy -> {
+                other.hp -= damage
+                if (other.hp <= 0) {
+                    other.player.score += 125f
+                }
+                onHit()
+                World.world.destroy(this)
+            }
+        }
+
     }
 }

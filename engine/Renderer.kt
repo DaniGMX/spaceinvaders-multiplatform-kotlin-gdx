@@ -1,5 +1,6 @@
 package architecture.engine
 
+import architecture.engine.structs.Text
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.*
 import com.badlogic.gdx.graphics.g2d.Sprite
@@ -11,51 +12,24 @@ import com.my.architecture.engine.structs.GameObject
 
 class Renderer {
     private lateinit var batch: SpriteBatch
-
     lateinit var camera: OrthographicCamera
+
+
     init {
         log.level = Logger.DEBUG
     }
     companion object {
-
         const val MAX_DEPTH: Int = 1000
         private var acc = 0.0f
         private var times = 0
-
         public val log = Logger("rendererx")
-
         private var spritesStore: HashMap<String, Sprite> = HashMap()
         private var textures: MutableList<TextureRegion> = mutableListOf(TextureRegion())
-
-
-
-
-        init {
-            //textures[0].setRegion(0, 0, 10000, 10000)
-        }
-
-        private fun spriteOptimized(src: String) {
-            var texture = Texture(src)
-
-        }
 
         /**
          * Render size. The camera will be affected by this.
          */
         var sizeRenderer: Vector2 = Vector2(1921.0f, 1080.0f)
-
-        fun setSize(sizeToSet: Vector2) {
-            if (sizeToSet.x < 0 || sizeToSet.y < 0) return
-//            sizeRenderer = sizeToSet
-        }
-
-
-
-        fun deleteSpriteFromStorage(src: String) {
-            var spr = spritesStore[src]
-            spr?.texture?.dispose()
-            spritesStore.remove(src)
-        }
 
         /**
          * Returns the specified sprite depending on the texture path. If it doesn't exist in the RAM storage it stores it.
@@ -134,6 +108,13 @@ class Renderer {
         log.info((acc / times).toString() + "ns")
     }
 
+    var textUI: MutableList<Text> = mutableListOf()
+
+    fun reset() {
+        textUI = mutableListOf()
+        Animator.animations = mutableListOf()
+    }
+
     fun renderOptimized(world: World) {
         Animator.animations.forEach { animation -> animation.update() }
 
@@ -164,6 +145,10 @@ class Renderer {
             )
             gameObject.sprite().setScale(if (gameObject.flipX) -1.0f else 1.0f, 1.0f)
             gameObject.sprite().draw(batch)
+        }
+
+        for (text in textUI) {
+            text.font.draw(batch, text.text, text.position.x, text.position.y)
         }
         batch.end()
     }

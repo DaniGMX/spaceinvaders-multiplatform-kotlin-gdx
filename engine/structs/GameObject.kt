@@ -18,6 +18,11 @@ open class GameObject(spritesSet: Array<Sprite> = arrayOf(), w: Float = 500.0f, 
     var active: Boolean = true
     var spriteIndex: Int = 0
 
+    val sizeSprites: Int
+    get() {
+        return sprites.size
+    }
+
     var depth: Int = 20
         set(value) {
             World.world.changedDepth()
@@ -46,6 +51,13 @@ open class GameObject(spritesSet: Array<Sprite> = arrayOf(), w: Float = 500.0f, 
             return this as T
         }
         return null
+    }
+
+    inline fun <reified T: GameObject> check(actionWhenNotNull: (gameObject: T) -> (Unit)): Boolean {
+        return if (this is T) {
+            actionWhenNotNull(this)
+            true
+        } else false
     }
 
     fun sprite(): Sprite {

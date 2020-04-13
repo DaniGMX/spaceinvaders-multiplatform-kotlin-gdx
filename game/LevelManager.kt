@@ -16,12 +16,26 @@ class Spawn (val positionToSpawn: Float, val enemies: Array<BasicEnemy>, val tim
 
     lateinit var player: Player
 
+    var timeBetweenSpawnsOfPlanetsAcc = 5.0f
+    val timeBetweenSpawnsOfPlanets = 10f
+
     override fun start() {
         player = World.world.findGameObjects<Player>().last()
     }
 
     override fun update(dt: Float) {
         time += dt
+        timeBetweenSpawnsOfPlanetsAcc += dt
+
+        if (timeBetweenSpawnsOfPlanetsAcc > timeBetweenSpawnsOfPlanets) {
+            val posX = Math.random().toFloat() * (LevelManager.level.rightBounds - LevelManager.level.leftBounds) + LevelManager.level.leftBounds
+            val planet = Planet(Vector2())
+            val posY = LevelManager.level.topBounds + planet.height
+            World.world.instantiate(planet)
+            planet.position.x = posX
+            planet.position.y = posY
+            timeBetweenSpawnsOfPlanetsAcc = 0.0f
+        }
 
         if (timeBetweenSpawns <= time) {
             time = 0.0f
@@ -46,7 +60,37 @@ class LevelManager : GameObject(arrayOf(), 0.0f, 0.0f){
     val enemiesToSpawn: MutableList<Spawn> = mutableListOf(
             Spawn(
                     1500.0f,
-                    Config.config01(),
+                    Config.randomConfig(10),
+                    2.2f,
+                    -200f
+            ),
+            Spawn(
+                    1800.0f,
+                    Config.randomConfig(10),
+                    4.2f,
+                    200f
+            ),
+            Spawn(
+                    2000.0f,
+                    Config.randomConfig(20),
+                    2.2f,
+                    -200f
+            ),
+            Spawn(
+                    2300.0f,
+                    Config.randomConfig(20),
+                    2.2f,
+                    400f
+            ),
+            Spawn(
+                    2800.0f,
+                    Config.randomConfig(20),
+                    2.2f,
+                    400f
+            ),
+            Spawn(
+                    3000.0f,
+                    Config.randomConfig(20),
                     2.2f,
                     -200f
             )
@@ -68,6 +112,11 @@ class LevelManager : GameObject(arrayOf(), 0.0f, 0.0f){
 
     companion object {
         lateinit var level: LevelManager
+
+        fun outOfBounds(position: Vector2, height: Float, width: Float): Boolean {
+            return position.y + height < LevelManager.level.bottomBounds || position.y > LevelManager.level.topBounds
+                    || position.x > LevelManager.level.rightBounds || position.x + width < LevelManager.level.leftBounds
+        }
     }
 
     override fun update(dt: Float) {
@@ -87,6 +136,7 @@ class LevelManager : GameObject(arrayOf(), 0.0f, 0.0f){
 
     private fun spawner() {
         if (currentSpawner >= enemiesToSpawn.size) return
+        Gdx.app.log("SPAWNER", "${camera.position.y + camera.viewportHeight / 2}")
         if (camera.position.y + camera.viewportHeight / 2 >= enemiesToSpawn[currentSpawner].positionToSpawn) {
             World.world.instantiate(enemiesToSpawn[currentSpawner])
             currentSpawner++
@@ -106,119 +156,4 @@ class LevelManager : GameObject(arrayOf(), 0.0f, 0.0f){
         camera.update()
     }
 
-}
-
-class Config {
-    companion object {
-        fun config01(): Array<BasicEnemy> {
-            return arrayOf(
-                    EnemyFollow(Vector2()),
-                    Enemy(Vector2(),
-                            40f,
-                            arrayOf(
-                                    Point(Vector2(0.4f, -0.6f), 100f, 10f),
-                                    Point(Vector2(0.7f, -0.9f), 200f, 10f)
-                            )
-                    ),
-                    Enemy(Vector2(),
-                            40f,
-                            arrayOf(
-                                    Point(Vector2(0.4f, -0.6f), 100f, 10f),
-                                    Point(Vector2(0.7f, -0.9f), 200f, 10f)
-                            )
-                    ),
-                    Enemy(Vector2(),
-                            40f,
-                            arrayOf(
-                                    Point(Vector2(0.4f, -0.6f), 100f, 10f),
-                                    Point(Vector2(0.7f, -0.9f), 200f, 10f)
-                            )
-                    ),
-                    Enemy(Vector2(),
-                            40f,
-                            arrayOf(
-                                    Point(Vector2(0.4f, -0.6f), 100f, 10f),
-                                    Point(Vector2(0.7f, -0.9f), 200f, 10f)
-                            )
-                    ),
-                    Enemy(Vector2(),
-                            40f,
-                            arrayOf(
-                                    Point(Vector2(0.4f, -0.6f), 100f, 10f),
-                                    Point(Vector2(0.7f, -0.9f), 200f, 10f)
-                            )
-                    ),
-                    Enemy(Vector2(),
-                            40f,
-                            arrayOf(
-                                    Point(Vector2(0.4f, -0.6f), 100f, 10f),
-                                    Point(Vector2(0.7f, -0.9f), 200f, 10f)
-                            )
-                    ),
-                    Enemy(Vector2(),
-                            40f,
-                            arrayOf(
-                                    Point(Vector2(0.4f, -0.6f), 100f, 10f),
-                                    Point(Vector2(0.7f, -0.9f), 200f, 10f)
-                            )
-                    ),
-                    Enemy(Vector2(),
-                            40f,
-                            arrayOf(
-                                    Point(Vector2(0.4f, -0.6f), 100f, 10f),
-                                    Point(Vector2(0.7f, -0.9f), 200f, 10f)
-                            )
-                    ),
-                    Enemy(Vector2(),
-                            40f,
-                            arrayOf(
-                                    Point(Vector2(0.4f, -0.8f), 100f, 10f),
-                                    Point(Vector2(0.7f, -0.9f), 200f, 10f)
-                            )
-                    ),
-                    Enemy(Vector2(),
-                            40f,
-                            arrayOf(
-                                    Point(Vector2(0.4f, -0.8f), 100f, 10f),
-                                    Point(Vector2(0.7f, -0.9f), 200f, 10f)
-                            )
-                    ),
-                    Enemy(Vector2(),
-                            40f,
-                            arrayOf(
-                                    Point(Vector2(-0.4f, -0.8f), 100f, 10f),
-                                    Point(Vector2(0.7f, -0.9f), 200f, 10f)
-                            )
-                    ),
-                    Enemy(Vector2(),
-                            40f,
-                            arrayOf(
-                                    Point(Vector2(-0.4f, -0.6f), 100f, 10f),
-                                    Point(Vector2(0.7f, -0.9f), 200f, 10f)
-                            )
-                    ),
-                    Enemy(Vector2(),
-                            40f,
-                            arrayOf(
-                                    Point(Vector2(-0.4f, -0.6f), 100f, 10f),
-                                    Point(Vector2(0.7f, -0.9f), 200f, 10f)
-                            )
-                    ),
-                    Enemy(Vector2(),
-                            40f,
-                            arrayOf(
-                                    Point(Vector2(-0.4f, -0.6f), 100f, 10f),
-                                    Point(Vector2(0.7f, -0.9f), 200f, 10f)
-                            )
-                    ),
-                    Enemy(Vector2(),
-                            40f,
-                            arrayOf(
-                                    Point(Vector2(0.4f, -0.6f), 100f, 10f),
-                                    Point(Vector2(0.7f, -0.9f), 200f, 10f)
-                            )
-                    )
-            )
-        }
-    }
 }

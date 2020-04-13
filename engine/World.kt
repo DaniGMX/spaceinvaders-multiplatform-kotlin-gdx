@@ -52,13 +52,11 @@ class World {
     fun start() {
         val inputs: InputMultiplexer = InputMultiplexer()
         val gesture = GestureDetector(input)
-        inputs.addProcessor(_inputProcess)
-        Gdx.app.log("type", "Is mobile or apple!!!?")
+        // Add the gesture listener
         inputs.addProcessor(gesture)
-        if (Gdx.app.type == Application.ApplicationType.Android || Gdx.app.type == Application.ApplicationType.Applet) {
-            Gdx.app.log("type", "Is mobile or apple")
-//            inputs.addProcessor(gesture)
-        }
+        // Add the input listener
+        inputs.addProcessor(_inputProcess)
+
         Gdx.input.inputProcessor = inputs
         currentInput = _inputProcess
         world = this
@@ -72,6 +70,11 @@ class World {
     fun destroy(gameObject: GameObject) {
         _gameObjects = _gameObjects.filter { g -> g != gameObject }.toMutableList()
         gameObject.onDestroy()
+    }
+
+    fun restart() {
+        Input.subscribers = mutableListOf()
+        _gameObjects = mutableListOf()
     }
 
     /**

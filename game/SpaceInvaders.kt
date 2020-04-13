@@ -20,6 +20,9 @@ class SpaceInvaders : Game() {
 
     companion object {
         lateinit var sprites: MutableList<Sprite>
+        lateinit var spritesBackground: MutableList<Sprite>
+
+        lateinit var spaceInvaders: SpaceInvaders
     }
 
     override fun start() {
@@ -28,7 +31,7 @@ class SpaceInvaders : Game() {
         World.setCurrentWorld(worlds[1])
         val rendererOpt = RendererOptimizer()
         val rendererBackground = RendererOptimizer()
-        sprites = rendererOpt.consumeSprites("ASSETS_05")
+        sprites = rendererOpt.consumeSprites("ASSETS_08")
         val baseURL = "assets/sprites/256px"
         if (sprites.isEmpty()) {
             // PLAYER SPRITE (0)
@@ -63,24 +66,52 @@ class SpaceInvaders : Game() {
             assert(rendererOpt.sprite("$baseURL/Explosion01_Frame_07_png_processed.png"))
             // Enemy 26
             assert(rendererOpt.sprite("$baseURL/Enemy02_Teal_Frame_1_png_processed.png"))
+            // PowerUp 27 (Violet)
+            assert(rendererOpt.sprite("$baseURL/Powerup_Energy_png_processed.png"))
+            // PowerUp rockets 28 (Green)
+            assert(rendererOpt.sprite("$baseURL/Powerup_Rockets_png_processed.png"))
+            // PowerUp health 29
+            assert(rendererOpt.sprite("$baseURL/Powerup_Health_png_processed.png"))
+
+            // Shooting Player Violet 30
+            assert(rendererOpt.sprite("$baseURL/Plasma_Medium_png_processed.png"))
+            // Shooting Green 31
+            assert(rendererOpt.sprite("$baseURL/Laser_Medium_png_processed.png"))
+
+            // Planets 32..46
+            for (i in 1..14) {
+                assert(rendererOpt.sprite("assets/planets/$i.png"))
+            }
+
             // Save them
             sprites = rendererOpt.consumeSprites()
 
-            rendererOpt.saveConsumedSprites("ASSETS_05")
+            rendererOpt.saveConsumedSprites("ASSETS_08")
         }
 
-        var spriteBackground = rendererBackground.consumeSprites("ASSET_BACKGROUND3")
-        if (spriteBackground.isEmpty()) {
+        spritesBackground = rendererBackground.consumeSprites("ASSET_BACKGROUND3")
+        if (spritesBackground.isEmpty()) {
             rendererBackground.sprite("assets/background/NebulaAqua-Pink.png")
-            spriteBackground = rendererBackground.consumeSprites()
+            spritesBackground = rendererBackground.consumeSprites()
             rendererBackground.saveConsumedSprites("ASSET_BACKGROUND3")
         }
+
+        instantiation()
+        spaceInvaders = this
+    }
+
+    fun restart() {
+        Game.restart()
+        instantiation()
+    }
+
+    fun instantiation() {
         instantiatePlayerAndJoysticks()
         World.world.instantiate(Enemy(Vector2(100f, 100f)))
         World.world.instantiate(SpecialAttackBar())
 
-        Background(spriteBackground[0])
-        HealthBar()
+        Background(spritesBackground[0])
+        UIManager()
         LevelManager()
     }
 

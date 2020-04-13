@@ -24,7 +24,10 @@ class BulletEnemy(pos: Vector2,
     lateinit var player: Player
 
     override fun update(dt: Float) {
-
+        if (LevelManager.outOfBounds(position, height, width)) {
+            World.world.destroy(this)
+            return
+        }
         if (!follow) {
             super.update(dt)
             return

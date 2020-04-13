@@ -55,7 +55,7 @@ class Animation(private val gameObject: GameObject, private val start: Int, priv
 class Animator {
 
     companion object {
-        val animations: MutableList<Animation> = mutableListOf()
+        var animations: MutableList<Animation> = mutableListOf()
         fun animate(gameObject: GameObject, start: Int, end: Int, framesBetween: Int, repeat: Boolean): Animation {
             animations.add(Animation(gameObject, start, end, framesBetween, repeat))
             return animations.last()

@@ -15,6 +15,16 @@ open class BasicEnemy(vecPos: Vector2 = Vector2(), sprites: Array<Sprite> = Spac
     override fun start() {
         player = World.world.findGameObjects<Player>().last()
     }
+
+    override fun onDestroy() {
+
+
+        val centerPos: Vector2 = Vector2(position.x, position.y)
+        World.world.instantiate(Explosion(centerPos, width.coerceAtLeast(height) / 1.3f))
+
+        if (Math.random() > 0.4f)
+            World.world.instantiate(Ammo(centerPos))
+    }
 }
 
 class Enemy(vecPos: Vector2, hp: Float = 100.0f, val points: Array<Point> = arrayOf(), sprites: Array<Sprite> = SpaceInvaders.sprites.slice(19..19).toTypedArray())
