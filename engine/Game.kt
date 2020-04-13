@@ -75,11 +75,11 @@ open class Game : ApplicationListener {
     }
 
     open override fun pause() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
     open override fun resume() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
     // endregion
