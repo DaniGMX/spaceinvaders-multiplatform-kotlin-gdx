@@ -19,6 +19,7 @@ class World {
     get() = _gameObjects
     // endregion
 
+    private var _inputGesture: Input = Input()
     private var _inputProcess: Input = Input()
 
     init {
@@ -51,7 +52,7 @@ class World {
      */
     fun start() {
         val inputs: InputMultiplexer = InputMultiplexer()
-        val gesture = GestureDetector(input)
+        val gesture = GestureDetector(_inputGesture)
         // Add the gesture listener
         inputs.addProcessor(gesture)
         // Add the input listener
@@ -73,7 +74,7 @@ class World {
     }
 
     fun restart() {
-        Input.subscribers = mutableListOf()
+        Input.input.subscribers = mutableListOf()
         _gameObjects = mutableListOf()
     }
 

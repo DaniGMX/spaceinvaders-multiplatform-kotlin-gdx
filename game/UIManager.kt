@@ -28,7 +28,6 @@ class UIManager : GameObject(arrayOf(), 0.0f, 0.0f) {
     }
 
     override fun update(dt: Float) {
-        Gdx.app.log("hp","${player!!.hp}")
         val deg = ((player!!.hp * 360f)) / 100f
         shape.color = Color.GREEN
         shape.begin(ShapeRenderer.ShapeType.Filled)

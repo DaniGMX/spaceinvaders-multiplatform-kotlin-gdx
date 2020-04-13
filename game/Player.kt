@@ -149,6 +149,11 @@ class Player(sprites: Array<Sprite>, private val movementJoystick: IJoystick, pr
         specialAttackJoy.unsubscribe(this)
     }
 
+    override fun tap(x: Float, y: Float, count: Int, button: Int): Boolean {
+        Gdx.app.log("tap", "tapped")
+        return super.tap(x, y, count, button)
+    }
+
     override fun onCollide(other: GameObject) {
         when (other) {
             is Ammo -> {
